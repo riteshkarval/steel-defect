@@ -23,7 +23,7 @@ args, _ = parser.parse_known_args()
 
 img_w = 800 # resized weidth
 img_h = 256 # resized height
-filename = 'temp.jpg'
+filename = '/tmp/temp.jpg'
 img = ""
 
 def b64_filewriter(filename, content):
@@ -51,7 +51,6 @@ class ImageTransformer(kfserving.KFModel):
         data = json_data["signatures"]["inputs"][0][0]["data"]
         b64_filewriter(filename, data)
         image = cv2.imread(filename, 0)
-        img = image
         x = image
         x = cv2.resize(x, (img_w, img_h))
         x = np.array(x, dtype=np.float64)
@@ -65,10 +64,7 @@ class ImageTransformer(kfserving.KFModel):
         logging.info("prep =======> %s",str(type(predictions)))
         image = cv2.imread(filename, 0)
         inp_img = cv2.resize(image, (img_w, img_h))
-        count = 0
         class_viz_count = [0,0,0,0]
-        class_iou_score = [0, 0, 0, 0]
-        class_mask_sum = [0, 0, 0, 0]
         class_pred_sum = [0, 0, 0, 0]
         pred = np.asarray(predictions['outputs'])
         t_img = cv2.resize(inp_img, (img_w, img_h))
@@ -90,8 +86,8 @@ class ImageTransformer(kfserving.KFModel):
         im2 = Image.fromarray(np.uint8((p_mask)*255), mode = 'L')
         alphaBlended1 = Image.blend(im1, im2, alpha=0.6)
         output = np.asarray(alphaBlended1)
-        cv2.imwrite('out.png', output)
-        with open('out.png', 'rb') as open_file:
+        cv2.imwrite('/tmp/out.png', output)
+        with open('/tmp/out.png', 'rb') as open_file:
             byte_content = open_file.read()
         base64_bytes = base64.b64encode(byte_content)
         base64_string = base64_bytes.decode('utf-8')

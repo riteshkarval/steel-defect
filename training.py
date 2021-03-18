@@ -191,7 +191,6 @@ else:
 
 MODEL_DIR = OUT_DIR + 'model/'
 LOG_DIR = MODEL_DIR + 'logs/'
-METRIC_PATH = OUT_DIR + 'metrics/'
 INF_EXPORT_PATH =  OUT_DIR
 
 img_w = 800 # resized weidth
@@ -238,20 +237,7 @@ for each_epoch in range(epochs):
     train_metrics = np.average(train_metrics, axis=0)
     print('Epoch = ', each_epoch+1, ', loss = ',train_metrics[0], 'tversky_dist = ', train_metrics[1])
 
-############### Writing Metrics ##########################
-metrics = []
-metric_names = ['train_loss', 'train_tversky']
-if not tf.io.gfile.exists(METRIC_PATH):
-    tf.io.gfile.makedirs(METRIC_PATH)
-for i in range(2):
-    temp = {}
-    temp['class'] = 'scalar'
-    temp['name'] = metric_names[i]
-    temp['value'] = str(train_metrics[i])
-    metrics.append(temp)
-metrics = {'metrics':metrics}
-with open(METRIC_PATH + 'metrics.json', 'w') as outfile:
-    json.dump(metrics, outfile, indent=4)
+
 ############### Saving Model ###############################
 version = 0
 if not tf.io.gfile.exists(INF_EXPORT_PATH):
