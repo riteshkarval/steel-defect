@@ -6,7 +6,7 @@ import numpy as np
 import os
 import cv2
 from matplotlib import pyplot as plt
-import shutil
+import shutil, zipfile
 
 def resize_image(image_dir, row, img_w, img_h):
     img_id = row['ImageId']
@@ -26,7 +26,12 @@ input_dir = '/opt/dkube/input/'
 # out_dir = '../../../output/'
 out_dir = '/opt/dkube/output/'
 print("Loading raw data...")
-data_dir = input_dir + 'severstal-steel-defect-detection/' 
+
+data_zip = os.path.join(input_dir, "severstal-steel-defect-detection.zip")
+with zipfile.ZipFile(data_zip, 'r') as zip_ref:
+    zip_ref.extractall("/tmp/data")
+
+data_dir = os.path.join('/tmp/data', 'severstal-steel-defect-detection')
 image_dir = os.path.join(data_dir, 'train_images')
 
 img_w = 800 # resized weidth
