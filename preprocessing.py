@@ -45,9 +45,8 @@ if not os.path.exists(out_img_dir):
 for i in range(len(train_df)):
     X = resize_image(image_dir, train_df.iloc[i], img_w, img_h)
     filename = train_df.iloc[i]['ImageId']
-#     print(X.shape, filename)
     plt.imsave(out_img_dir + filename, X.reshape(img_h,img_w))
     if i%100==0:
         print('Finished processing ' + str(i) + ' images') 
-shutil.copyfile(data_dir + 'train.csv', out_dir + 'train.csv') 
+shutil.copyfile(os.path.join(data_dir, 'train.csv'), os.path.join(out_dir, 'train.csv')) 
 print("Data prprocessing finished")
